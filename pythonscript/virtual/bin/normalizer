@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' "/home/sharon/Documents/Cloud Projects/templatemo_578_first_portfolio/pythonscript/virtual/bin/python3" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from charset_normalizer import cli
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(cli.cli_detect())
