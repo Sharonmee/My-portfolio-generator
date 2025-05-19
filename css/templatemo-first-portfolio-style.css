@@ -718,50 +718,73 @@ strong {
   PROJECTS              
 -----------------------------------------*/
 .projects-thumb {
-  background: var(--section-bg-color);
-  border: 2px solid var(--white-color);
-  border-radius: var(--border-radius-medium);
-  position: relative;
-  overflow: hidden;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  padding: 40px;
-  transition: all ease 0.5s;
+  background: #2a2a2a;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
 }
 
 .projects-thumb:hover {
-  border-color: var(--secondary-color);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.projects-thumb:hover .projects-image,
-.projects-thumb:focus .projects-image {
-  transform: rotate(0) translateY(0);
-}
-
-.projects-thumb .popup-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.projects-image {
-  border-radius: var(--border-radius-medium);
-  display: block;
-  width: 100%;
-  transform: rotate(10deg) translateY(80px);
-  transition: all ease 0.5s;
-}
-
-.projects-title {
-  margin-bottom: 20px;
+.projects-info {
+  margin-bottom: 15px;
 }
 
 .projects-tag {
-  font-size: var(--menu-font-size);
-  font-weight: var(--font-weight-medium);
-  color: var(--secondary-color);
-  text-transform: uppercase;
-  margin-bottom: 5px;
+  color: #535da1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.projects-title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.projects-description {
+  color: #999999;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.projects-stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.projects-stats span {
+  color: #999999;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.projects-stats i {
+  color: #535da1;
+}
+
+.projects-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #535da1;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.projects-link:hover {
+  color: #ffffff;
 }
 
 
