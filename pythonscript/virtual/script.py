@@ -22,7 +22,7 @@ bedrock = boto3.client(
 )
 
 # Target GitHub username
-username = "kwabenadarkwa"
+username = "Sharonmee"
 
 # Get user details
 user = g.get_user(username)
@@ -31,6 +31,23 @@ email = user.email
 bio = user.bio
 url = user.html_url
 location = user.location
+
+# Get additional GitHub stats
+public_repos = user.public_repos
+followers = user.followers
+following = user.following
+avatar_url = user.avatar_url
+
+# Get repository languages
+languages = {}
+for repo in user.get_repos():
+    if repo.language:
+        languages[repo.language] = languages.get(repo.language, 0) + 1
+
+# Sort languages by frequency
+sorted_languages = sorted(languages.items(), key=lambda x: x[1], reverse=True)
+top_languages = [{"name": lang, "count": count} for lang, count in sorted_languages[:5]]
+
 # List to store project summaries
 projects = []
 
@@ -86,7 +103,7 @@ for repo in pinned_repos:
 
 # Generate the 'About' professional summary
 about_prompt = f"""
-Help me write a beautiful and professional summary to include in my resume about myself.
+Help me write a beautiful and professional summary to include in my resume about myself.Make it very nautal and start at once without any preamble about this being the output.
 Highlight my key skills, purpose, technologies used, and a few projects I have worked on.
 Pick projects from the list related to my profession.
 
@@ -96,32 +113,82 @@ Here are some project highlights:
 Please ensure the summary is concise (around 100 - 150 words), professional, and suitable for a technical audience.
 """
 
+# input_data = {
+#     "anthropic_version": "bedrock-2023-05-31",
+#     "max_tokens": 1000,
+#     "messages": [
+#         {
+#             "role": "user",
+#             "content": [
+#                 {
+#                     "type": "text",
+#                     "text": about_prompt
+#                 }
+#             ]
+#         }
+#     ]
+# }
+
+# kwargs = {
+#     "modelId": "anthropic.claude-3-haiku-20240307-v1:0",
+#     "contentType": "application/json",
+#     "accept": "application/json",
+#     "body": json.dumps(input_data).encode('utf-8')
+# }
+
+
+
+
+
+# {
+#   "modelId": "amazon.nova-lite-v1:0",
+#   "contentType": "application/json",
+#   "accept": "application/json",
+#   "body": {
+#     "inferenceConfig": {
+#       "max_new_tokens": 1000
+#     },
+#     "messages": [
+#       {
+#         "role": "user",
+#         "content": [
+#           {
+#             "text": about_prompt
+#           }
+#         ]
+#       }
+#     ]
+#   }
+# }
+
 input_data = {
-    "anthropic_version": "bedrock-2023-05-31",
-    "max_tokens": 1000,
+    "inferenceConfig": {
+      "max_new_tokens": 1000
+    },
     "messages": [
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": about_prompt
-                }
-            ]
-        }
+      {
+        "role": "user",
+        "content": [
+          {
+            "text": about_prompt
+          }
+        ]
+      }
     ]
-}
+  }
 
 kwargs = {
-    "modelId": "anthropic.claude-3-haiku-20240307-v1:0",
+    "modelId": "amazon.nova-lite-v1:0",
     "contentType": "application/json",
     "accept": "application/json",
     "body": json.dumps(input_data).encode('utf-8')
 }
 
+
 response = bedrock.invoke_model(**kwargs)
-response_body = json.loads(response.get('body').read())
-completion = response_body.get('content')
+response_text = response['body'].read().decode('utf-8')
+response_body = json.loads(response_text)
+completion = response_body['output']['message']['content']
 about = completion[0]['text']
 
 # Calculate years of experience based on account creation
@@ -140,7 +207,13 @@ table.put_item(
         'YearsOfExperience': years_of_experience,
         'Projects': projects,
         'URL': url,
-        'Location': location
+        'Location': location,
+        'PublicRepos': public_repos,
+        'Followers': followers,
+        'Following': following,
+        'AvatarUrl': avatar_url,
+        'Languages': top_languages,
+        'Bio': bio
     }
 )
 
@@ -148,6 +221,8 @@ print("Successfully uploaded user portfolio to DynamoDB ✅")
 
 
 print("Successfully uploaded projects to DynamoDB ✅")
+
+print(about)
 
 # DynamoDB for projects  setup
 dynamodb = boto3.resource('dynamodb')
