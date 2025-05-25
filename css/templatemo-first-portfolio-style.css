@@ -12,13 +12,16 @@ https://templatemo.com/tm-578-first-portfolio
 -----------------------------------------*/
 :root {
   --white-color:                  #ffffff;
-  --primary-color:                #535da1;
-  --secondary-color:              #14B789;
-  --section-bg-color:             #f9f9f9;
-  --dark-color:                   #000000;
-  --p-color:                      #717275;
+  --primary-color:                #2D3250;
+  --secondary-color:              #424769;
+  --accent-color:                 #676F9D;
+  --section-bg-color:             #f8f9fa;
+  --dark-color:                   #1B1B1B;
+  --p-color:                      #4A4A4A;
   --border-color:                 #e9eaeb;
-  --featured-border-color:        #727aab;
+  --featured-border-color:        #676F9D;
+  --gradient-start:               #2D3250;
+  --gradient-end:                 #424769;
 
   --body-font-family:             'DM Sans', sans-serif;
 
@@ -264,17 +267,18 @@ strong {
 }
 
 .custom-btn {
-  background: var(--secondary-color);
+  background: var(--accent-color);
   border-radius: var(--border-radius-large);
   color: var(--white-color);
   font-weight: var(--font-weight-bold);
   padding: 12px 24px;
+  transition: all 0.3s ease;
 }
 
 .custom-btn:hover {
   background: var(--primary-color);
-  box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
-  color: var(--white-color);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .custom-border-btn {
@@ -468,7 +472,7 @@ strong {
   HERO              
 -----------------------------------------*/
 .hero {
-  background: var(--secondary-color);
+  background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
   position: relative;
   overflow: hidden;
   padding-top: 330px;
@@ -561,14 +565,37 @@ strong {
   margin-right: 10px;
   padding: 13px 30px;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .profile-body p {
   margin-bottom: 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.profile-body p:nth-of-type(even) {
-  background: var(--white-color);
+.profile-body p:last-child {
+  border-bottom: none;
+}
+
+.profile-body p span {
+  padding: 13px 30px;
+  display: inline-block;
+}
+
+.profile-body p a {
+  color: var(--p-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.profile-body p a:hover {
+  color: var(--secondary-color);
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .about-image {
@@ -718,16 +745,17 @@ strong {
   PROJECTS              
 -----------------------------------------*/
 .projects-thumb {
-  background: #2a2a2a;
-  border-radius: 10px;
-  padding: 20px;
+  background: var(--primary-color);
+  border-radius: 15px;
+  padding: 25px;
   margin-bottom: 30px;
   transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .projects-thumb:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
 }
 
 .projects-info {
@@ -735,17 +763,21 @@ strong {
 }
 
 .projects-tag {
-  color: #535da1;
+  color: var(--accent-color);
   font-size: 0.9rem;
   font-weight: 500;
   margin-bottom: 10px;
   display: inline-block;
+  background: rgba(255,255,255,0.1);
+  padding: 5px 15px;
+  border-radius: 20px;
 }
 
 .projects-title {
-  color: #ffffff;
+  color: var(--white-color);
   font-size: 1.5rem;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-weight: var(--font-weight-bold);
 }
 
 .projects-description {
@@ -797,10 +829,9 @@ strong {
 
 .contact-info {
   background: var(--white-color);
-  border-top-right-radius: var(--border-radius-small);
-  border-bottom-right-radius: var(--border-radius-small);
-  padding: 60px 30px 30px 30px;
-  height: 100%;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .contact-info-border-start {
@@ -825,6 +856,9 @@ strong {
   padding-top: 13px;
   padding-bottom: 13px;
   outline: none;
+  border-radius: 10px;
+  padding: 15px;
+  transition: all 0.3s ease;
 }
 
 .form-floating>label {
@@ -877,10 +911,9 @@ strong {
   border-color: var(--secondary-color);
 }
 
-.custom-form .form-control:hover,
 .custom-form .form-control:focus {
-  background: transparent;
-  border-color: var(--secondary-color);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.2rem rgba(103, 111, 157, 0.25);
 }
 
 .custom-form .form-floating textarea {
@@ -888,19 +921,19 @@ strong {
 }
 
 .custom-form button[type="submit"] {
-  background: var(--secondary-color);
+  background: var(--accent-color);
   border: none;
-  border-radius: var(--border-radius-large);
+  border-radius: 10px;
   color: var(--white-color);
   font-weight: var(--font-weight-bold);
-  transition: all 0.3s;
-  margin-bottom: 0;
+  padding: 15px 30px;
+  transition: all 0.3s ease;
 }
 
-.custom-form button[type="submit"]:hover,
-.custom-form button[type="submit"]:focus {
+.custom-form button[type="submit"]:hover {
   background: var(--primary-color);
-  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 
