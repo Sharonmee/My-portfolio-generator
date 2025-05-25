@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
      <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script
+  <!-- <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script> -->
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,27 +104,8 @@
         <p class="text-center mt-4 copyright">Copyright &copy; 2025 Sharon Yawlui</p>
     </div>
 
-    <script type="module" src="js/firebase.js" />
-    
-    <script type="module">
-        import { signInWithGitHub } from './js/firebase.js';
-        
-        document.getElementById('githubForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent form submission
-            const username = document.getElementById('username').value;
-
-            if (username) {
-                document.querySelector('.loading').style.display = 'block';
-                try {
-                    const user = await signInWithGitHub();
-                    console.log('Authentication successful:', user);
-                } catch (error) {
-                    console.error('Authentication error:', error);
-                    document.querySelector('.loading').style.display = 'none';
-                }
-            }
-        });
-    </script>
+    <script type="module" src="./js/firebase.js" />
+       </script>
 </body>
 </html> 
 
