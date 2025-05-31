@@ -16,7 +16,7 @@ const getValue = (userData, field, type = 'S') => {
                  return bodyData[field][type];
             }
         } catch (e) {
-            console.error("Could not parse nested body JSON", e);
+            // console.error("Could not parse nested body JSON", e);
         }
     }
     return 'Not Found';
@@ -27,12 +27,12 @@ function getUsernameFromUrl() {
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-    console.log('script running');
+    // console.log('script running');
 
     const username = getUsernameFromUrl();
-    console.log('Username:', username);
+    // console.log('Username:', username);
     if (!username) {
-        console.error('No username provided');
+        // console.error('No username provided');
         return;
     }
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const userUrl = `${config.BASE_URL}?username=${username}`;
         const userRes = await fetch(userUrl);
         const userData = await userRes.json();
-        console.log('User Data:', userData);
+        // console.log('User Data:', userData);
 
         // Update basic info
         updateElement('user-name', getValue(userData, 'Name'));
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (Array.isArray(languages)) {
             displayLanguages(languages);
         } else {
-             console.warn('Languages data is not an array:', languages);
+            //  console.warn('Languages data is not an array:', languages);
              displayLanguages([]); // Call with empty array to clear/show not found
         }
 
@@ -100,12 +100,12 @@ document.addEventListener('DOMContentLoaded', async function () {
          if (Array.isArray(projects)) {
             displayProjects(projects);
         } else {
-             console.warn('Projects data is not an array:', projects);
+            //  .warn('Projects data is not an array:', projects);
              displayProjects([]); // Call with empty array to clear/show not found
         }
 
     } catch (error) {
-        console.error('Error fetching user data:', error);
+        // console.error('Error fetching user data:', error);
          // Optionally display error messages on the page
         document.getElementById('user-name').textContent = 'Error';
         document.getElementById('about').textContent = 'Error loading data.';
@@ -150,11 +150,11 @@ function updateElement(id, value, isLink = false) {
 }
 
 function displayLanguages(languages) {
-    console.log('Languages data received:', languages);
+    // console.log('Languages data received:', languages);
 
     const container = document.getElementById('languages-container');
     if (!container) {
-        console.error('Languages container not found');
+        // console.error('Languages container not found');
         return;
     }
 
@@ -200,7 +200,7 @@ function displayLanguages(languages) {
 
         container.innerHTML = languagesHtml;
     } catch (error) {
-        console.error('Error displaying languages:', error);
+        // console.error('Error displaying languages:', error);
         container.innerHTML = '<p class="text-danger">Error loading languages data</p>';
     }
 }
@@ -208,7 +208,7 @@ function displayLanguages(languages) {
 function displayProjects(projects) {
     const projectsContainer = document.getElementById('projects-container');
     if (!projectsContainer) {
-        console.error('Projects container not found');
+        // console.error('Projects container not found');
         return;
     }
 
@@ -226,7 +226,7 @@ function displayProjects(projects) {
             const projectData = projectWrapper?.M?.project?.M || projectWrapper?.project?.M || projectWrapper?.M || projectWrapper;
 
             if (!projectData) {
-                console.warn(`Invalid project data structure at index ${index}:`, projectWrapper);
+                // console.warn(`Invalid project data structure at index ${index}:`, projectWrapper);
                 return;
             }
 
@@ -237,7 +237,7 @@ function displayProjects(projects) {
 
              // Only display projects with a valid name and URL
              if (repoName === 'Untitled Project' || url === '#') {
-                 console.warn(`Skipping project at index ${index} due to missing name or URL:`, projectData);
+                //  console.warn(`Skipping project at index ${index} due to missing name or URL:`, projectData);
                  return;
             }
 
@@ -257,7 +257,7 @@ function displayProjects(projects) {
             `;
             projectsContainer.insertAdjacentHTML('beforeend', projectHtml);
         } catch (error) {
-            console.error(`Error displaying project at index ${index}:`, error);
+            // console.error(`Error displaying project at index ${index}:`, error);
         }
     });
 }
