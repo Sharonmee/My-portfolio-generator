@@ -117,7 +117,7 @@
                 document.querySelector('.loading').style.display = 'block';
                 try {
                     const user = await signInWithGitHub();
-                    console.log('Authentication successful:', user);
+                    <!-- console.log('Authentication successful:', user); -->
                 } catch (error) {
                     console.error('Authentication error:', error);
                     document.querySelector('.loading').style.display = 'none';
