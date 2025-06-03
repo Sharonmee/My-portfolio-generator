@@ -4,7 +4,7 @@ frontend:
     preBuild:
       commands:
         - npm install
-        - node build.js
+        - npm run build
     build:
       commands:
         - echo "Build phase completed"
@@ -12,6 +12,11 @@ frontend:
     baseDirectory: .
     files:
       - '**/*'
+      - '!node_modules/**/*'
+      - '!package-lock.json'
+      - '!amplify.yml'
+      - '!build.js'
+      - '!package.json'
   cache:
     paths:
       - node_modules/**/* 

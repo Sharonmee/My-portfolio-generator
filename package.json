@@ -1,0 +1,16 @@
+{
+  "name": "my-portfolio-generator",
+  "version": "1.0.0",
+  "description": "Portfolio Generator Web Application",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js",
+    "start": "serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  },
+  "devDependencies": {
+    "@aws-amplify/cli": "^12.10.0"
+  }
+} 
