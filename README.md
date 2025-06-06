@@ -1,6 +1,6 @@
 # GitHub Portfolio Generator
 
-A modern, responsive portfolio generator that automatically creates a beautiful personal website from your GitHub profile data. Built with Next.js, TypeScript, and Tailwind CSS.
+This is a github portfolio genrator build entirely with AWS services with  modern, responsive portfolio generator that automatically creates a beautiful personal website from your GitHub profile data. Built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Features
 
