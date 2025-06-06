@@ -1,29 +1,10 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { User, signInWithRedirect, signOut, GithubAuthProvider, getRedirectResult, signInWithPopup } from 'firebase/auth'
+import { User, signInWithPopup, signOut, GithubAuthProvider } from 'firebase/auth'
 import { auth, githubProvider } from '@/lib/firebase'
 import { useRouter } from 'next/navigation'
 import { fetchGitHubUserData, generatePortfolio } from '@/lib/api'
-
-// Custom hook to detect mobile screens
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
-    setIsMobile(mediaQuery.matches);
-
-    const handleResize = (e: MediaQueryListEvent) => {
-      setIsMobile(e.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleResize);
-    return () => mediaQuery.removeEventListener('change', handleResize);
-  }, []);
-
-  return isMobile;
-};
 
 interface AuthContextType {
   user: User | null
@@ -45,7 +26,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const isMobile = useIsMobile()
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
@@ -53,114 +33,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
     })
 
-    // Handle redirect result
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result) {
-          const credential = GithubAuthProvider.credentialFromResult(result);
-          const token = credential?.accessToken;
-
-          if (!token) {
-            throw new Error('Failed to get GitHub access token');
-          }
-
-          try {
-            // Fetch GitHub user data
-            console.log('Fetching GitHub user data...');
-            const githubUser = await fetchGitHubUserData(token);
-            console.log('Got GitHub user data:', githubUser);
-
-            const username = githubUser.login;
-            console.log('Extracted username:', username);
-
-            // Generate portfolio
-            console.log('Generating portfolio...');
-            await generatePortfolio(username);
-            console.log('Portfolio generated successfully');
-
-            // Store auth state
-            sessionStorage.setItem('authenticated', 'true');
-            sessionStorage.setItem('github_username', username);
-
-            // Redirect to portfolio page
-            router.push(`/myportfolio/${username}`);
-          } catch (error) {
-            console.error('Error in GitHub flow:', error);
-            if (error instanceof Error && error.message.includes('token is invalid or revoked')) {
-              // Clear auth state
-              sessionStorage.removeItem('authenticated');
-              sessionStorage.removeItem('github_username');
-              sessionStorage.removeItem('auth_pending');
-              throw new Error('GitHub session expired. Please sign in again.');
-            }
-            throw error;
-          }
-        }
-      } catch (error) {
-        console.error('Redirect result error:', error);
-        if (error instanceof Error) {
-          alert(error.message);
-        } else {
-          alert('Failed to sign in with GitHub. Please try again.');
-        }
-      }
-    };
-
-    handleRedirectResult();
-    return () => unsubscribe();
-  }, [router]);
+    return () => unsubscribe()
+  }, [])
 
   const signInWithGithub = async () => {
     console.log('signInWithGithub called');
     try {
       setLoading(true);
-      
-      if (isMobile) {
-        // Use redirect for mobile screens
-        await signInWithRedirect(auth, githubProvider);
-      } else {
-        // Use popup for desktop screens
-        const result = await signInWithPopup(auth, githubProvider);
-        if (result.user) {
-          const credential = GithubAuthProvider.credentialFromResult(result);
-          const token = credential?.accessToken;
+      const result = await signInWithPopup(auth, githubProvider);
+      console.log('signInWithGithub result:', result);
+      if (result.user) {
+        // Get the GitHub access token
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
 
-          if (!token) {
-            throw new Error('Failed to get GitHub access token');
+        if (!token) {
+          throw new Error('Failed to get GitHub access token');
+        }
+
+        try {
+          // Fetch GitHub user data
+          console.log('Fetching GitHub user data...');
+          const githubUser = await fetchGitHubUserData(token);
+          console.log('Got GitHub user data:', githubUser);
+
+          const username = githubUser.login;
+          console.log('Extracted username:', username);
+
+          // Generate portfolio
+          console.log('Generating portfolio...');
+          await generatePortfolio(username);
+          console.log('Portfolio generated successfully');
+
+          // Store auth state
+          sessionStorage.setItem('authenticated', 'true');
+          sessionStorage.setItem('github_username', username);
+
+          // Redirect to portfolio page
+          router.push(`/myportfolio/${username}`);
+        } catch (error) {
+          console.error('Error in GitHub flow:', error);
+          if (error instanceof Error && error.message.includes('token is invalid or revoked')) {
+            // Clear auth state
+            sessionStorage.removeItem('authenticated');
+            sessionStorage.removeItem('github_username');
+            sessionStorage.removeItem('auth_pending');
+            throw new Error('GitHub session expired. Please sign in again.');
           }
-
-          try {
-            // Fetch GitHub user data
-            console.log('Fetching GitHub user data...');
-            const githubUser = await fetchGitHubUserData(token);
-            console.log('Got GitHub user data:', githubUser);
-
-            const username = githubUser.login;
-            console.log('Extracted username:', username);
-
-            // Generate portfolio
-            console.log('Generating portfolio...');
-            await generatePortfolio(username);
-            console.log('Portfolio generated successfully');
-
-            // Store auth state
-            sessionStorage.setItem('authenticated', 'true');
-            sessionStorage.setItem('github_username', username);
-
-            // Redirect to portfolio page
-            router.push(`/myportfolio/${username}`);
-          } catch (error) {
-            console.error('Error in GitHub flow:', error);
-            if (error instanceof Error && error.message.includes('token is invalid or revoked')) {
-              // Clear auth state
-              sessionStorage.removeItem('authenticated');
-              sessionStorage.removeItem('github_username');
-              sessionStorage.removeItem('auth_pending');
-              throw new Error('GitHub session expired. Please sign in again.');
-            }
-            throw error;
-          }
+          throw error;
         }
       }
     } catch (error) {
@@ -170,6 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         alert('Failed to sign in with GitHub. Please try again.');
       }
+    } finally {
       setLoading(false);
     }
   }
