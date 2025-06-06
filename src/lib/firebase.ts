@@ -11,17 +11,15 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 }
 
-// Initialize Firebase
+// Initialize Firebase without hosting-specific features
 const app = initializeApp(firebaseConfig);
 
-// Configure auth
+// Initialize Auth with custom persistence
 const auth = getAuth(app);
-auth.useDeviceLanguage();
+auth.setPersistence(browserLocalPersistence); // Use local persistence instead of session
 
 // Configure GitHub provider
 const githubProvider = new GithubAuthProvider();
 
-// Set persistence to LOCAL to maintain session
-auth.setPersistence(browserLocalPersistence);
 
 export { app, auth, githubProvider };
