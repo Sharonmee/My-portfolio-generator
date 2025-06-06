@@ -67,10 +67,10 @@ export default function Home() {
         <div className="bg-gray-50 rounded-xl p-4 space-y-2">
           <p className="font-medium text-gray-900 text-sm">What you'll get:</p>
           <ul className="text-xs text-gray-600 space-y-1">
-            <li>• A beautiful portfolio showcasing your GitHub projects</li>
-            <li>• Your coding skills and experience</li>
-            <li>• Your GitHub statistics and achievements</li>
-            <li>• A professional contact section</li>
+            <li>• Years of experience are estimated based on the age of your GitHub account</li>
+            <li>• Future updates will include more cutomizable features</li>
+            <li>• For accurate results please ensure your github is up to date </li>
+            <li>• Only pinned projects are displayed due to the the potential large project count</li>
           </ul>
         </div>
 

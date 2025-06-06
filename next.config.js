@@ -11,6 +11,10 @@ const nextConfig = {
     async rewrites() {
         return [
             {
+                source: '/',
+                destination: '/index.html',
+            },
+            {
                 source: '/myportfolio',
                 destination: '/myportfolio/',
             },
@@ -23,18 +27,13 @@ const nextConfig = {
     async redirects() {
         return [
             {
-                source: '/',
-                destination: '/index.html',
+                source: '/portfolio',
+                destination: '/myportfolio',
                 permanent: true,
             },
             {
-                source: '/myportfolio',
-                destination: '/myportfolio/',
-                permanent: true,
-            },
-            {
-                source: '/myportfolio/:username',
-                destination: '/myportfolio/:username/',
+                source: '/portfolio/:username',
+                destination: '/myportfolio/:username',
                 permanent: true,
             },
         ]
