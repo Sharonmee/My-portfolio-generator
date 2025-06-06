@@ -118,50 +118,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (isMobile) {
         // Use redirect for mobile screens
-        await signInWithRedirect(auth, githubProvider);
+        try {
+          await signInWithRedirect(auth, githubProvider);
+        } catch (error) {
+          console.error('Redirect sign-in error:', error);
+          // If redirect fails, try popup as fallback
+          const result = await signInWithPopup(auth, githubProvider);
+          await handleAuthResult(result);
+        }
       } else {
         // Use popup for desktop screens
         const result = await signInWithPopup(auth, githubProvider);
-        if (result.user) {
-          const credential = GithubAuthProvider.credentialFromResult(result);
-          const token = credential?.accessToken;
-
-          if (!token) {
-            throw new Error('Failed to get GitHub access token');
-          }
-
-          try {
-            // Fetch GitHub user data
-            console.log('Fetching GitHub user data...');
-            const githubUser = await fetchGitHubUserData(token);
-            console.log('Got GitHub user data:', githubUser);
-
-            const username = githubUser.login;
-            console.log('Extracted username:', username);
-
-            // Generate portfolio
-            console.log('Generating portfolio...');
-            await generatePortfolio(username);
-            console.log('Portfolio generated successfully');
-
-            // Store auth state
-            sessionStorage.setItem('authenticated', 'true');
-            sessionStorage.setItem('github_username', username);
-
-            // Redirect to portfolio page
-            router.push(`/myportfolio/${username}`);
-          } catch (error) {
-            console.error('Error in GitHub flow:', error);
-            if (error instanceof Error && error.message.includes('token is invalid or revoked')) {
-              // Clear auth state
-              sessionStorage.removeItem('authenticated');
-              sessionStorage.removeItem('github_username');
-              sessionStorage.removeItem('auth_pending');
-              throw new Error('GitHub session expired. Please sign in again.');
-            }
-            throw error;
-          }
-        }
+        await handleAuthResult(result);
       }
     } catch (error) {
       console.error('GitHub sign-in error:', error);
@@ -171,6 +139,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         alert('Failed to sign in with GitHub. Please try again.');
       }
       setLoading(false);
+    }
+  }
+
+  // Helper function to handle authentication result
+  const handleAuthResult = async (result: any) => {
+    if (result?.user) {
+      const credential = GithubAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+
+      if (!token) {
+        throw new Error('Failed to get GitHub access token');
+      }
+
+      try {
+        // Fetch GitHub user data
+        console.log('Fetching GitHub user data...');
+        const githubUser = await fetchGitHubUserData(token);
+        console.log('Got GitHub user data:', githubUser);
+
+        const username = githubUser.login;
+        console.log('Extracted username:', username);
+
+        // Generate portfolio
+        console.log('Generating portfolio...');
+        await generatePortfolio(username);
+        console.log('Portfolio generated successfully');
+
+        // Store auth state
+        sessionStorage.setItem('authenticated', 'true');
+        sessionStorage.setItem('github_username', username);
+
+        // Redirect to portfolio page
+        router.push(`/myportfolio/${username}`);
+      } catch (error) {
+        console.error('Error in GitHub flow:', error);
+        if (error instanceof Error && error.message.includes('token is invalid or revoked')) {
+          // Clear auth state
+          sessionStorage.removeItem('authenticated');
+          sessionStorage.removeItem('github_username');
+          sessionStorage.removeItem('auth_pending');
+          throw new Error('GitHub session expired. Please sign in again.');
+        }
+        throw error;
+      }
     }
   }
 
